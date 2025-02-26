@@ -1,5 +1,9 @@
 # MovieSearchApp
 
+![start_screen](https://github.com/user-attachments/assets/9d036650-1a65-4dc9-967a-ae6239a2f32f)
+
+![search_result](https://github.com/user-attachments/assets/68c76d24-13ce-482b-ad89-ed79b03e613d)
+
 **Project Overview
 **
 
