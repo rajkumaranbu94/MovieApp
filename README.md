@@ -12,7 +12,7 @@ MVVM (Model-View-ViewModel):
 
 Model: Represents the data structure (movie details, such as title, year, and poster).
 
-View: The UI components (e.g., RecyclerView for Android) that display the data.
+View: The UI components (e.g., RecyclerView) that display the data.
 
 ViewModel: Acts as the intermediary between the view and the model, handling data fetching and transformation.
 
