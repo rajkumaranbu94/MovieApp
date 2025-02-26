@@ -1,13 +1,12 @@
 # MovieSearchApp
 
-**Project Overview
-**
+**Project Overview**
 
-This app allows users to search for movies by title. When a user enters a search term, the app will fetch results from the OMDb API and display a list of movies with their title, release year, and poster image. The app should provide a seamless and user-friendly experience, ensuring smooth navigation, responsiveness, and clarity.
+This app allows users to search for movies by title. When a user enters a search term, the app will fetch results from the OMDb API and display a list of movies with their title, release year, and poster image. This app will provide a seamless and user-friendly experience, ensuring smooth navigation, responsiveness, and clarity.
 
 **Architecture and Design Patterns**
 
-For a maintainable, scalable app, we can adopt popular design patterns and architecture principles:
+For a maintainable, scalable app, I have adopted the below popular design patterns and architecture principles:
 
 MVVM (Model-View-ViewModel):
 
@@ -17,14 +16,10 @@ View: The UI components (e.g., RecyclerView for Android) that display the data.
 
 ViewModel: Acts as the intermediary between the view and the model, handling data fetching and transformation.
 
-**Repository Pattern:**
-
-To manage data sources efficiently, use the Repository Pattern. The repository will act as a single source of truth, managing both remote (API) and local data storage (if applicable).
-
 **Networking:**
 
-Retrofit (Android) for network requests.
-Handle API responses with Coroutine (Android) to maintain a responsive UI.
+Retrofit for network requests.
+Handle API responses with Coroutine to maintain a responsive UI.
 
 **Tools and Technologies:**
 
