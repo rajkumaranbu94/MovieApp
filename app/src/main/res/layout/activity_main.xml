@@ -65,6 +65,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:contentDescription="@string/movie_poster"
             android:src="@drawable/ic_movie_filter" />
 
         <TextView
