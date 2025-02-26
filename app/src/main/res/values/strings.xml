@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">MovieApp</string>
+    <string name="app_name">MovieSearchApp</string>
+    <string name="enter_movie_title">Enter movie title</string>
+    <string name="auto_fill_hint">Eg: Marvel,MIB…</string>
+    <string name="search">Search</string>
+    <string name="go">Go</string>
+    <string name="enter_valid_data">Please enter at least 3 characters of a movie name to begin the search.</string>
+    <!--List Item-->
+    <string name="movie_poster">Movie Poster</string>
+    <string name="welcome_text">Find the Perfect Movie Today!</string>
+    <string name="search_movie">Search your favorite movies here.</string>
 </resources>

@@ -1,47 +1,89 @@
 package com.fudu.movieapp
 
+import MovieSearchAdapter
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.fudu.movieapp.ui.theme.MovieAppTheme
+import android.view.View
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.animation.AnimationUtils
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.fudu.movieapp.ui.moviesearch.MovieSearchViewModel
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var movieViewModel: MovieSearchViewModel
+    private lateinit var movieSearchAdapter: MovieSearchAdapter
+    private lateinit var recyclerView: RecyclerView
+
+    @SuppressLint("MissingInflatedId", "InlinedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MovieAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+        setContentView(R.layout.activity_main)
+        initializeView()
+    }
+
+    private fun initializeView() {
+        movieViewModel = ViewModelProvider(this).get(MovieSearchViewModel::class.java)
+        recyclerView = findViewById(R.id.moviesSearchRecyclerView)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        movieSearchAdapter = MovieSearchAdapter(emptyList())
+        recyclerView.adapter = movieSearchAdapter
+        val welcomeText = findViewById<LinearLayout>(R.id.layout_welcome_text)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.progress_bar_anim)
+        welcomeText.visibility = View.VISIBLE
+        findViewById<Button>(R.id.searchButton).setOnClickListener {
+            progressBar.visibility = View.VISIBLE
+            progressBar.startAnimation(rotateAnimation)
+            val movieName = findViewById<EditText>(R.id.searchEditText).text.toString()
+            if (movieName.isNotEmpty() && movieName.length >= 3) {
+                movieViewModel.searchMovie(movieName)
+            } else {
+                disableProgressBar(progressBar)
+                welcomeText.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                Toast.makeText(this, getString(R.string.enter_valid_data), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
+        setData(welcomeText, progressBar)
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    @SuppressLint("NotifyDataSetChanged")
+    private fun setData(welcomeText: LinearLayout, progressBar: ProgressBar) {
+        movieViewModel.moviesList.observe(this, Observer { movies ->
+            disableWelcomeView(welcomeText)
+            disableProgressBar(progressBar)
+            movies?.let {
+                recyclerView.visibility = View.VISIBLE
+                movieSearchAdapter = MovieSearchAdapter(movies)
+                recyclerView.adapter = movieSearchAdapter
+                movieSearchAdapter.notifyDataSetChanged()
+            }
+        })
+        movieViewModel.error.observe(this, Observer { errorMessage ->
+            disableProgressBar(progressBar)
+            welcomeText.visibility = View.VISIBLE
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        })
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieAppTheme {
-        Greeting("Android")
+    private fun disableWelcomeView(welcomeText: LinearLayout) {
+        welcomeText.visibility = View.GONE
+    }
+
+    private fun disableProgressBar(progressBar: ProgressBar) {
+        progressBar.clearAnimation()
+        progressBar.visibility = View.GONE
     }
 }
