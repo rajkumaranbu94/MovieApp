@@ -44,46 +44,30 @@ Git for version control and collaboration.
 
 Search Bar:
 
-A search bar at the top of the screen where users can type movie titles. As they type, suggestions can be shown (depending on API capabilities).
-Use a debounce function to avoid excessive API calls during each keystroke.
+A search bar at the top of the screen where users can type movie titles. 
 
 Display Movie Results:
 
-Each result should have the movie’s title, release year, and poster image.
-Use an ImageView in Android or an UIImageView in iOS to display the movie poster, ensuring images are loaded asynchronously using a caching library like Glide (Android) or SDWebImage (iOS).
+Each result will have the movie’s title, release year, and poster image.
+Used an ImageView in this app to display the movie poster, ensuring images are loaded asynchronously using a caching library like Glide.
 
 Error Handling:
 
-If the API request fails (e.g., no internet, invalid search, No movie data), display a Toast (Android) with an error message.
-Also, show an appropriate message if no results are found.
+If the API request fails (e.g.,invalid search, No movie data),will display a Toast with an error message.
+Also, will show an appropriate message if no results are found.
 
 Loading State:
 
-Show a loading indicator (e.g., an animated movie widget spinner) while the app is fetching data.
-Hide the loading indicator once the data is successfully fetched.
+Will show a loading indicator (e.g., an animated movie widget spinner) while the app is fetching data.
+And also, will hide the loading indicator once the data is successfully fetched.
 
-**Getting Started
-**
+**Getting Started**
 
-Clone the repository:
+1) Clone the repository into your machine
 
-bash
-Copy
-git clone https://github.com/yourusername/movie-search-app.git
-cd movie-search-app
-Install dependencies:
+2) Run the app
 
-Android:
-bash
-Copy
-./gradlew build
-iOS:
-bash
-Copy
-pod install
-Run the app:
-
-Android: Open the project in Android Studio and run it.
+Open the project in Android Studio and run it.
 
 ![start_screen](https://github.com/user-attachments/assets/9d036650-1a65-4dc9-967a-ae6239a2f32f)
 
