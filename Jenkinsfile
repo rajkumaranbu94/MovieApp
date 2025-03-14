@@ -2,8 +2,13 @@ pipeline {
     agent any
 
     environment {
+        // Set the path to the existing JDK installation
+        JAVA_HOME = '/Users/vichuraj/Library/Java/JavaVirtualMachines/openjdk-23.0.1/Contents/Home'
+        PATH = "$JAVA_HOME/bin:$PATH"
+
+        // Set the path to the existing Android SDK installation
         ANDROID_HOME = '/Users/vichuraj/Library/Android/sdk'
-        PATH = "$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+        PATH = "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
     }
 
     stages {
@@ -13,22 +18,13 @@ pipeline {
             }
         }
 
-        stage('Set up JDK') {
+        stage('Set up Environment') {
             steps {
                 sh '''
-                    echo "Setting up JDK 11"
-                    brew install openjdk@11
-                '''
-            }
-        }
-
-        stage('Set up Android SDK') {
-            steps {
-                sh '''
-                    echo "Setting up Android SDK"
-                    brew install --cask android-sdk
-                    yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
-                    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;34.0.0" "platform-tools"
+                    echo "Using existing JDK and Android SDK"
+                    echo "JAVA_HOME: $JAVA_HOME"
+                    echo "ANDROID_HOME: $ANDROID_HOME"
+                    echo "PATH: $PATH"
                 '''
             }
         }
