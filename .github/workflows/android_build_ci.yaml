@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -20,8 +20,8 @@ jobs:
           echo "GitHub Workspace: $GITHUB_WORKSPACE"
           echo "GitHub Action Path: $GITHUB_ACTION_PATH"
 
-      - name: Upload test file
-        uses: actions/upload-artifact@v2
+      - name: Upload artifact
+        uses: https://github.com/actions/upload-artifact@v2
         with:
-          name: test-file
-          path: test.txt
+          name: my-artifact
+          path: path/to/artifact
