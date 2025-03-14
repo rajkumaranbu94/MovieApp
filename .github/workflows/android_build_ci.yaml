@@ -1,4 +1,4 @@
-name: Test Action Download
+name: Test Upload Artifact
 
 on: [push]
 
@@ -10,8 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Test upload-artifact
+      - name: Create a test file
+        run: echo "Hello, world!" > test.txt
+
+      - name: Upload test file
         uses: actions/upload-artifact@v3
         with:
           name: test-file
-          path: README.md
+          path: test.txt
