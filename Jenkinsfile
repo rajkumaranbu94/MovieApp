@@ -15,12 +15,22 @@ pipeline {
             }
         }
 
+        // Stage 2: Set up JDK
+        stage('Set up JDK') {
+            steps {
+                sh '''
+                    echo "Setting up JDK 11"
+                    apt-get install -y openjdk-11-jdk
+                '''
+            }
+        }
+
         // Stage 3: Set up Android SDK
         stage('Set up Android SDK') {
             steps {
                 sh '''
                     echo "Setting up Android SDK"
-                    sudo apt-get install -y wget unzip
+                    apt-get install -y wget unzip
                     wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
                     unzip commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME
                     mkdir -p $ANDROID_HOME/cmdline-tools/latest
