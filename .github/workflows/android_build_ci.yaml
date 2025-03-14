@@ -32,25 +32,13 @@ jobs:
 
       - name: Set up Android SDK
         run: |
-          # Install necessary packages to download SDK
           sudo apt-get install -y wget unzip
-
-          # Download and extract the SDK tools
           wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
           unzip commandlinetools-linux-6858069_latest.zip -d $HOME/android-sdk
-
-          # Set the ANDROID_HOME and update PATH environment variables
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
-
-          # Accept SDK licenses
+          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
           yes | sdkmanager --licenses
-
-          # Install Android SDK components for API 34 and Build Tools
-          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
-
-          # Install other necessary SDK components (optional but recommended)
-          sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+          sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
       - name: Build APK
         run: ./gradlew clean assembleRelease
