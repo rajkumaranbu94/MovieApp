@@ -4,11 +4,12 @@ pipeline {
     environment {
         // Set the path to the existing JDK installation
         JAVA_HOME = '/Users/vichuraj/Library/Java/JavaVirtualMachines/openjdk-23.0.1/Contents/Home'
-        PATH = "$JAVA_HOME/bin:$PATH"
 
         // Set the path to the existing Android SDK installation
         ANDROID_HOME = '/Users/vichuraj/Library/Android/sdk'
-        PATH = "$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+
+        // Combine all PATH updates into a single definition
+        PATH = "$JAVA_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
     }
 
     stages {
