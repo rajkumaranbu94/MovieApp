@@ -69,6 +69,7 @@ jobs:
         with:
           name: android-apk-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
+          allowEmptyArchive: true
 
       - name: Check Java version
         run: java -version
