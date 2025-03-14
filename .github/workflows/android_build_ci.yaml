@@ -26,15 +26,17 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
           restore-keys: |
-            ${{ runner.os }}-gradle-
+            gradle-${{ runner.os }}-
 
       - name: Set up Android SDK
         run: |
-          sudo apt-get install -y wget unzip
-          wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
-          unzip commandlinetools-linux-6858069_latest.zip -d $HOME/android-sdk
+          if [ ! -d "$HOME/android-sdk" ]; then
+            sudo apt-get install -y wget unzip
+            wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+            unzip commandlinetools-linux-6858069_latest.zip -d $HOME/android-sdk
+          fi
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
           yes | sdkmanager --licenses
@@ -50,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: app/build/test-results/testDebugUnitTest/
+          path: app/build/test-results/**/*.xml
 
       - name: Upload APK as artifact
         uses: actions/upload-artifact@v2
