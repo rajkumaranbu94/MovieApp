@@ -13,8 +13,8 @@ jobs:
       - name: Create a test file
         run: echo "Hello, world!" > test.txt
 
-      - name: Upload test file
-        uses: actions/upload-artifact@v3
+      - name: Download artifact
+        uses: actions/download-artifact@v3
         with:
           name: test-file
-          path: test.txt
+          path: ./downloaded-artifact
