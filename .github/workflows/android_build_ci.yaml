@@ -60,8 +60,13 @@ jobs:
       - name: List build output directory
         run: ls -R app/build/outputs/apk/debug/
 
+      - name: Test GitHub Connectivity
+        run: |
+          echo "Testing connectivity to GitHub..."
+          curl -I https://github.com/actions/upload-artifact
+
       - name: Upload Debug APK as artifact
-        uses: actions/upload-artifact@v3
+        uses: https://github.com/actions/upload-artifact@v3
         with:
           name: android-apk-debug-${{ github.sha }}
           path: app/build/outputs/apk/debug/*.apk
