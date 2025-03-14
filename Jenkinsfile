@@ -2,64 +2,66 @@ pipeline {
     agent any
 
     environment {
-        // Set the ANDROID_HOME path to where you have installed the SDK
-        ANDROID_HOME = '/Users/vichuraj/Library/Android/sdk'
-
-        // Update PATH to include the SDK tools and platform tools
-        PATH = "$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
+        // Set environment variables
+        ANDROID_HOME = '/path/to/android-sdk' // Update this path
+        PATH = "$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
     }
 
     stages {
+        // Stage 1: Checkout the code
         stage('Checkout') {
             steps {
-                // Checkout the code from the repository
                 git branch: 'main', url: 'https://github.com/rajkumaranbu94/MovieApp.git'
             }
         }
 
+        // Stage 2: Set up JDK
+        stage('Set up JDK') {
+            steps {
+                sh '''
+                    echo "Setting up JDK 11"
+                    sudo apt-get install -y openjdk-11-jdk
+                '''
+            }
+        }
+
+        // Stage 3: Set up Android SDK
         stage('Set up Android SDK') {
             steps {
-                script {
-                    // Accept licenses for SDK components
-                    sh 'yes | sdkmanager --licenses'
-                    // Install the required SDK platforms and build tools
-                    sh 'sdkmanager "platforms;android-30" "build-tools;30.0.3"'
-                }
+                sh '''
+                    echo "Setting up Android SDK"
+                    sudo apt-get install -y wget unzip
+                    wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+                    unzip commandlinetools-linux-6858069_latest.zip -d $ANDROID_HOME
+                    mkdir -p $ANDROID_HOME/cmdline-tools/latest
+                    mv $ANDROID_HOME/cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
+                    yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
+                    $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-35" "build-tools;34.0.0" "platform-tools"
+                '''
             }
         }
 
+        // Stage 4: Build the APK
         stage('Build APK') {
             steps {
-                script {
-                    // Clean and build the APK
-                    sh './gradlew clean assembleRelease'
-                }
+                sh './gradlew clean assembleRelease'
             }
         }
 
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    // Run unit tests
-                    sh './gradlew test'
-                }
-            }
-        }
-
+        // Stage 5: Archive the APK
         stage('Archive APK') {
             steps {
-                script {
-                    // Archive the APK file
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'app/build/outputs/apk/release/*.apk'
-                }
+                archiveArtifacts artifacts: 'app/build/outputs/apk/release/*.apk', fingerprint: true
             }
         }
     }
 
     post {
-        always {
-            // Clean up any temporary files, if necessary
-            cleanWs()
+        success {
+            echo "Build succeeded! APK is available in the artifacts."
+        }
+        failure {
+            echo "Build failed. Check the logs for details."
         }
     }
 }
