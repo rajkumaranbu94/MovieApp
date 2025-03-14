@@ -15,16 +15,6 @@ pipeline {
             }
         }
 
-        // Stage 2: Set up JDK
-        stage('Set up JDK') {
-            steps {
-                sh '''
-                    echo "Setting up JDK 11"
-                    sudo apt-get install -y openjdk-11-jdk
-                '''
-            }
-        }
-
         // Stage 3: Set up Android SDK
         stage('Set up Android SDK') {
             steps {
