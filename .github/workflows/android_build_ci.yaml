@@ -23,46 +23,52 @@ jobs:
           distribution: 'adoptopenjdk'
 
       - name: Cache Gradle dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
-            path: ~/.gradle/caches
-            key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-            restore-keys: |
-              gradle-${{ runner.os }}-
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Set up Android SDK
         run: |
-          if [ ! -d "$HOME/android-sdk" ]; then
-            sudo apt-get install -y wget unzip
-            wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
-            unzip commandlinetools-linux-6858069_latest.zip -d $HOME/android-sdk
-          fi
+          # Install necessary packages to download SDK
+          sudo apt-get install -y wget unzip
+
+          # Download and extract the SDK tools
+          wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
+          unzip commandlinetools-linux-6858069_latest.zip -d $HOME/android-sdk
+
+          # Set the ANDROID_HOME and update PATH environment variables
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
+          echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
+
+          # Accept SDK licenses
           yes | sdkmanager --licenses
-          sdkmanager "platforms;android-30" "build-tools;30.0.3"
 
-      - name: Build APK with Gradle (Debugging)
-        run: ./gradlew clean assembleRelease --stacktrace
+          # Install Android SDK components for API 34 and Build Tools
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
-      - name: List files in APK output directory
-        run: |
-                ls -al app/build/outputs/apk/
+          # Install other necessary SDK components (optional but recommended)
+          sdkmanager "extras;android;m2repository" "extras;google;m2repository"
+
+      - name: Build APK
+        run: ./gradlew clean assembleRelease
 
       - name: Run Unit Tests
         run: ./gradlew test
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
-            name: test-results
-            path: app/build/test-results/**/*.xml
+          name: test-results
+          path: app/build/test-results/testDebugUnitTest/
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
-            name: android-apk-${{ github.sha }}
-            path: app/build/outputs/apk/release/*.apk
+          name: android-apk-${{ github.sha }}
+          path: app/build/outputs/apk/release/*.apk
 
       - name: Check Java version
         run: java -version

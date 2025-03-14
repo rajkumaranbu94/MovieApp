@@ -2,8 +2,11 @@ pipeline {
     agent any
 
     environment {
-        ANDROID_HOME = '/opt/android-sdk-linux'
-        GRADLE_HOME = '/opt/gradle'
+        // Set the ANDROID_HOME path to where you have installed the SDK
+        ANDROID_HOME = '/Users/vichuraj/Library/Android/sdk'
+
+        // Update PATH to include the SDK tools and platform tools
+        PATH = "$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
     }
 
     stages {
@@ -17,7 +20,9 @@ pipeline {
         stage('Set up Android SDK') {
             steps {
                 script {
+                    // Accept licenses for SDK components
                     sh 'yes | sdkmanager --licenses'
+                    // Install the required SDK platforms and build tools
                     sh 'sdkmanager "platforms;android-30" "build-tools;30.0.3"'
                 }
             }
