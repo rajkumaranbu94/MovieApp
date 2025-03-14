@@ -13,8 +13,15 @@ jobs:
       - name: Create a test file
         run: echo "Hello, world!" > test.txt
 
+      - name: Debug GitHub Actions Environment
+        run: |
+          echo "Runner OS: $RUNNER_OS"
+          echo "Runner Temp: $RUNNER_TEMP"
+          echo "GitHub Workspace: $GITHUB_WORKSPACE"
+          echo "GitHub Action Path: $GITHUB_ACTION_PATH"
+
       - name: Upload test file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: test-file
           path: test.txt
