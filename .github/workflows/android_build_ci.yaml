@@ -23,12 +23,12 @@ jobs:
           distribution: 'adoptopenjdk'
 
       - name: Cache Gradle dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: ~/.gradle/caches
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
+            path: ~/.gradle/caches
+            key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
+            restore-keys: |
+              gradle-${{ runner.os }}-
 
       - name: Set up Android SDK
         run: |
