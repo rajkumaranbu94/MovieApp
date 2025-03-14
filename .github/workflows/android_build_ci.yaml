@@ -22,6 +22,9 @@ jobs:
           java-version: '11'
           distribution: 'adoptopenjdk'
 
+      - name: Check Java version
+        run: java -version
+
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
@@ -35,26 +38,31 @@ jobs:
           sudo apt-get install -y wget unzip
           wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
           unzip commandlinetools-linux-6858069_latest.zip -d $HOME/android-sdk
+          mkdir -p $HOME/android-sdk/cmdline-tools/latest
+          mv $HOME/android-sdk/cmdline-tools/* $HOME/android-sdk/cmdline-tools/latest/
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$PATH" >> $GITHUB_ENV
-          yes | sdkmanager --licenses
-          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Debug Environment
+        run: |
+          echo "ANDROID_HOME: $ANDROID_HOME"
+          echo "PATH: $PATH"
+          which sdkmanager
 
       - name: Build APK
-        run: ./gradlew clean assembleRelease
+        run: ./gradlew clean assembleRelease --no-daemon
 
       - name: Run Unit Tests
-        run: ./gradlew test
+        run: ./gradlew test --no-daemon
 
       - name: List build output directory
         run: ls -R app/build/outputs/apk/debug/
 
       - name: Upload Debug APK as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: android-apk-debug-${{ github.sha }}
           path: app/build/outputs/apk/debug/*.apk
           allowEmptyArchive: true
-
-      - name: Check Java version
-        run: java -version
