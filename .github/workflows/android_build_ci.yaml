@@ -59,13 +59,13 @@ jobs:
         run: ./gradlew test
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: test-results
           path: app/build/test-results/testDebugUnitTest/
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: android-apk-${{ github.sha }}
           path: app/build/outputs/apk/release/*.apk
